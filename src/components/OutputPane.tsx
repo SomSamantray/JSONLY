@@ -63,19 +63,21 @@ export function OutputPane({ input, activeTab, onTabChange, shouldProcess, onPro
           endpoint += 'beautify';
       }
 
-      console.log('Sending request to:', endpoint);
+      console.log('Attempting to fetch from:', endpoint);
+      
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Origin': window.location.origin
         },
-        body: JSON.stringify({ 
-          data: input 
-        })
+        mode: 'cors',
+        credentials: 'include',
+        body: JSON.stringify({ data: input })
       });
 
-      console.log('Response status:', response.status);
+      console.log('Response received:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -93,8 +95,8 @@ export function OutputPane({ input, activeTab, onTabChange, shouldProcess, onPro
         setError('');
       }
     } catch (err) {
-      console.error('Full error details:', err);
-      setError(err instanceof Error ? err.message : 'Failed to process the request');
+      console.error('Fetch error:', err);
+      setError('Connection error. Please check if the server is running.');
       setOutput('');
     } finally {
       setLoading(false);

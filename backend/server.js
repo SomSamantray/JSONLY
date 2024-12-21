@@ -8,10 +8,11 @@ const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(cors({
-  origin: ['https://jsonly.vercel.app', 'http://localhost:5173'],
+  origin: true, // Allow all origins in development
   methods: ['GET', 'POST'],
-  credentials: true
-}));  // Allow all origins in development
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Accept', 'Origin']
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // Logging middleware
@@ -124,6 +125,10 @@ app.post('/api/validate', (req, res) => {
   } catch (error) {
     res.json({ status: 'error', error: error.message });
   }
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'success', message: 'Server is running' });
 });
 
 app.listen(port, () => {
