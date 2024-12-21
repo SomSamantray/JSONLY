@@ -4,10 +4,14 @@ const { create } = require('xmlbuilder2');
 const { Parser } = require('json2csv');
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 // Middleware
-app.use(cors());  // Allow all origins in development
+app.use(cors({
+  origin: ['https://jsonly.vercel.app', 'http://localhost:5173'],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));  // Allow all origins in development
 app.use(express.json({ limit: '10mb' }));
 
 // Logging middleware

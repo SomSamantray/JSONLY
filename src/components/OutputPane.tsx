@@ -63,6 +63,7 @@ export function OutputPane({ input, activeTab, onTabChange, shouldProcess, onPro
           endpoint += 'beautify';
       }
 
+      console.log('Sending request to:', endpoint);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -74,8 +75,11 @@ export function OutputPane({ input, activeTab, onTabChange, shouldProcess, onPro
         })
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Error response:', errorData);
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
 
@@ -89,12 +93,8 @@ export function OutputPane({ input, activeTab, onTabChange, shouldProcess, onPro
         setError('');
       }
     } catch (err) {
-      console.error('Error details:', err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Failed to process the request. Please try again.');
-      }
+      console.error('Full error details:', err);
+      setError(err instanceof Error ? err.message : 'Failed to process the request');
       setOutput('');
     } finally {
       setLoading(false);
