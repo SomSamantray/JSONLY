@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: json-converter-api
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: PORT
+        value: 8000 
